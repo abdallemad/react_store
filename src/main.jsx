@@ -8,7 +8,7 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
   <Provider store={store}>
-    <ToastContainer position='top-center' autoClose={5000}  />
+    <ToastContainer position='top-left' autoClose={5000}  />
     <App />
   </Provider>
   </>,
