@@ -16,3 +16,5 @@ export {default as FormSelect} from './FormSelect.jsx'
 export {default as CartTotal} from './CartTotal.jsx';
 export {default as CartItemsList} from './CartItemsList.jsx';
 export {default as CheckoutForm} from './CheckoutForm.jsx'
+export {default as OrderList} from './OrderList.jsx';
+export {default as ComplexPagination} from './ComplexPagination.jsx';

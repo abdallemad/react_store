@@ -4,9 +4,10 @@ import customFetch from "../utils/custom";
 import { toast } from "react-toastify";
 import { loginUser } from "../features/user/userSlice";
 import { useDispatch } from "react-redux";
+
 export const action =(store)=> 
     async({request})=>{
-      console.log(store);
+      // console.log(store);
       const formData = await request.formData();
       const data = Object.fromEntries(formData.entries());
       try {

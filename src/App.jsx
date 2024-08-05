@@ -15,10 +15,13 @@ import { createBrowserRouter,RouterProvider } from "react-router-dom"
 // actions...
 import {action as LoginAction } from './pages/Login';
 import {action as registerAction } from './pages/Register';
+import {action as orderAction} from './components/CheckoutForm';
 // loaders...
 import {loader as landingLoader} from './pages/Landing'
 import {loader as singleProductLoader} from './pages/SingleProduct';
 import {loader as productsLoader} from './pages/Products'
+import {loader as CheckoutLoader} from './pages/Checkout'
+import {loader as OrderLoader} from './pages/Orders';
 import store from './features/store'
 
 const router = createBrowserRouter([
@@ -54,11 +57,14 @@ const router = createBrowserRouter([
       },
       {
         path:'checkout',
-        element:<Checkout />
+        element:<Checkout />,
+        action: orderAction(store),
+        loader: CheckoutLoader(store)
       },
       {
         path:'orders',
-        element:<Orders />
+        element:<Orders />,
+        loader: OrderLoader(store),
       },
 
     ]
