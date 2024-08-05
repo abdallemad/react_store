@@ -12,6 +12,8 @@ import {
 } from "./pages"
 import { ErrorElement } from "./components";
 import { createBrowserRouter,RouterProvider } from "react-router-dom"
+import { QueryClient,QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // actions...
 import {action as LoginAction } from './pages/Login';
 import {action as registerAction } from './pages/Register';
@@ -24,6 +26,14 @@ import {loader as CheckoutLoader} from './pages/Checkout'
 import {loader as OrderLoader} from './pages/Orders';
 import store from './features/store'
 
+const queryClient = new QueryClient({
+  defaultOptions:{
+    queries:{
+      staleTime: 1000 * 60 * 5
+    }
+  }
+})
+
 const router = createBrowserRouter([
   {
     path:'/',
@@ -34,18 +44,18 @@ const router = createBrowserRouter([
         index:true,
         element:<Landing />,
         errorElement:<ErrorElement />,
-        loader: landingLoader
+        loader: landingLoader(queryClient)
 
       },
       {
         path:'products',
         element:<Products />,
-        loader: productsLoader
+        loader: productsLoader(queryClient)
       },
       {
         path:'products/:id',
         element:<SingleProducts />,
-        loader: singleProductLoader
+        loader: singleProductLoader(queryClient)
       },
       {
         path:'cart',
@@ -58,13 +68,13 @@ const router = createBrowserRouter([
       {
         path:'checkout',
         element:<Checkout />,
-        action: orderAction(store),
+        action: orderAction(store,queryClient),
         loader: CheckoutLoader(store)
       },
       {
         path:'orders',
         element:<Orders />,
-        loader: OrderLoader(store),
+        loader: OrderLoader(store,queryClient),
       },
 
     ]
@@ -84,10 +94,14 @@ const router = createBrowserRouter([
 ])
 
 
+
 const App = () => {
   
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient} >
+      <RouterProvider router={router} />
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   )
 }
 

@@ -1,26 +1,37 @@
 import { redirect, useLoaderData } from "react-router-dom";
 import { toast } from "react-toastify";
 import customFetch from "../utils/custom";
-import { OrderList, PaginationContainer, SectionTitle } from "../components";
+import { OrderList, ComplexPagination, SectionTitle } from "../components";
 
-export const loader =(store)=>
+const orderQuery = (params,user)=>{
+  return {
+    queryFn: ()=> customFetch.get('/orders',{
+      params:params,
+      headers:{
+        Authorization:`Bearer ${user.token}`
+      }
+    }),
+    queryKey:['orders',params.page?parseInt(params.page) : 1]
+  }
+}
+
+export const loader =(store,queryClient)=>
   async ({request})=>{
+    console.log(queryClient)
     const {url} = request;
     const params = Object.fromEntries([...new URL(url).searchParams.entries()])
+    
     const user = store.getState().user.user;
+
     if(!user){
       toast.warn('you must login to view the orders');
       return redirect('/login');
     }
+
     try {
-      const response = await customFetch.get('/orders',{
-        params:params,
-        headers:{
-          Authorization:`Bearer ${user.token}`
-        }
-      })
+      const response = await queryClient.ensureQueryData(orderQuery(params,user))
       const {data} = response
-      console.log(response)
+      // console.log(response)
       return {orders:data.data,meta:data.meta};
     } catch (error) {
       const errorMassage = error?.response?.data?.error?.massage || 'please check your cradintion';
@@ -37,7 +48,7 @@ const Orders = () => {
     <>
       <SectionTitle text={'your orders'} /> 
       <OrderList />
-      {/* <PaginationContainer /> */}
+      <ComplexPagination />
     </>
   )
 }

@@ -2,8 +2,16 @@
 import {FeatureProducts} from '../components'
 import { Hero } from "../components"
 import customFetch from "../utils/custom"
-export const loader = async()=>{
-  const {data:res} = await customFetch('/products?featured=true');
+
+const featuredProductQuery = {
+  queryKey:['featuredProduct'],
+  queryFn:()=> customFetch('/products?featured=true')
+}
+
+export const loader =(queryClient)=> async()=>{
+  const {data:res} = await queryClient.ensureQueryData(featuredProductQuery);
+  console.log(queryClient);
+  console.log('hello world')
   const data = res.data
   return {data}
 }
